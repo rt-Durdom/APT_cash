@@ -1,0 +1,32 @@
+# Виртуальное окружение (uv / venv)
+.venv/
+.uv/
+env/
+venv/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Логи
+*.log
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+static_root/
+local_settings.py
+
+# Тесты / coverage
+htmlcov/
+.coverage
+.pytest_cache/
+
+# IDE / редакторы
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
