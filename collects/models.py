@@ -47,7 +47,9 @@ class Collect (models.Model):
         default=0,
         verbose_name='Количество доноров',
     )
-    image = models.URLField(
+    image = models.ImageField(
+        upload_to='collects_images/',
+        null=True,
         blank=True,
         verbose_name='Картинка сбора',
     )
