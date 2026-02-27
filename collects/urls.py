@@ -1,6 +1,9 @@
-from django.contrib import admin
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    # path('', ),
-]
+from collects.views import CollectViewSet, PaymentViewSet
+
+
+router = DefaultRouter()
+router.register(r'collects', CollectViewSet, basename='collect')
+router.register(r'payments', PaymentViewSet, basename='payment')
+urlpatterns = router.urls
