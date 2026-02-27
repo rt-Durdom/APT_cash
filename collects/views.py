@@ -6,6 +6,7 @@ from rest_framework.generics import get_object_or_404
 from .models import Collect, Payment
 from .serializers import CollectSerializer, PaymentSerializer
 from .permissions import IsAuthorOrReadOnly
+from .emails import send_email
 
 
 class CollectViewSet(viewsets.ModelViewSet):
@@ -17,8 +18,17 @@ class CollectViewSet(viewsets.ModelViewSet):
         return Collect.objects.filter(author=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-    
+        collect = serializer.save(author=self.request.user)
+
+        send_email(
+            subject='Сбор создан',
+            message=(
+                f'Добрый день, {self.request.user.username}!\n'
+                f'Сбор "{collect.name_collect}" создан.\n'
+            ),
+            recipient=self.request.user.email
+        )
+
     @action(detail=True, methods=['get'], url_path='donors')
     def list_donors(self, request, pk=None):
         collect = get_object_or_404(Collect, pk=pk)
@@ -49,4 +59,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
         return Payment.objects.filter(donor=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(donor=self.request.user)
+        payment = serializer.save(donor=self.request.user)
+
+        send_email(
+            subject='Платеж получен',
+            message=(
+                f'Добрый день, {self.request.user.username}!\n'
+                f'Платеж на сбор "{payment.collect.name_collect}" получен.\n'
+            ),
+            recipient=self.request.user.email
+        )
