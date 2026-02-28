@@ -140,7 +140,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # DEFAULT_FROM_EMAIL = 'no-reply@apt-cash.local'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.yandex.ru")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", 465))
@@ -149,3 +149,22 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False") == "True"
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "True") == "True"
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis_db')
+REDIS_PORT = os.getenv('REDIS_PORT', '6379')
+# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', '')
+CACHES = {
+    # "default" is the alias.
+    'default': {
+        # Here, we're using the Redis cache backend.
+        'BACKEND': 'django_redis.cache.RedisCache',
+
+        # A LOCATION parameter to specify the Redis server's address and port.
+        # f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0' - REDIS_PASSWORD 
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}

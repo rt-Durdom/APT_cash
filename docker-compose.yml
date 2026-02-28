@@ -18,7 +18,17 @@ services:
       - 8000:8000
     depends_on:
       - db
+      - redis_db
     env_file: .env
+  
+  redis_db:
+    image: redis:alpine
+    container_name: redis_db
+    ports:
+      - 6379:6379
+    env_file:
+       - ./.env
+    restart: unless-stopped
 
 volumes:
   pg_data:
