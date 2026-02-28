@@ -36,7 +36,7 @@ class CollectViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], url_path='donors')
     def list_donors(self, request, pk=None):
-        collect = get_object_or_404(Collect, pk=pk)
+        collect = self.get_object()
         payments = (
             Payment.objects
             .filter(collect=collect)
@@ -67,6 +67,10 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         payment = serializer.save(donor=self.request.user)
+        collect = payment.collect
+        collect.current_amount += payment.amount
+        collect.donors_count += 1
+        collect.save(update_fields=['current_amount', 'donors_count'])
 
         send_email(
             subject='Платеж получен',
